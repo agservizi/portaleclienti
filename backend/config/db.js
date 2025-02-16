@@ -1,4 +1,4 @@
-const mysql = require("mysql2");
+const mysql = require("mysql");
 
 // Configurazione della connessione al database
 const db = mysql.createConnection({
@@ -12,11 +12,9 @@ const db = mysql.createConnection({
 db.connect((err) => {
     if (err) {
         console.error("Errore durante la connessione al database:", err);
-        process.exit(1); // Termina l'applicazione in caso di errore
-    } else {
-        console.log("Connesso al database MySQL");
+        return;
     }
+    console.log("Connessione al database riuscita!");
 });
 
-// Esporta la connessione per utilizzarla in altri moduli
 module.exports = db;
