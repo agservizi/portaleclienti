@@ -5,7 +5,7 @@ const db = mysql.createConnection({
     host: "127.0.0.1", // O l'indirizzo del server MySQL
     user: "u427445037_coresuite", // Nome utente del database
     password: "Giogiu2123@", // Password del database
-    database: "coresuite", // Nome del database
+    database: "u427445037_coresuite", // Nome del database
 });
 
 // Connessione al database
