@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrazione</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="hold-transition register-page">
+    <div class="register-box">
+        <div class="register-logo">
+            <a href="index.html"><b>Portale</b>Clienti</a>
+        </div>
+        <!-- Registrazione Form -->
+        <div class="card">
+            <div class="card-body register-card-body">
+                <p class="login-box-msg">Registrati come cliente</p>
+                <form id="registerForm">
+                    <div class="input-group mb-3">
+                        <input type="text" id="username" class="form-control" placeholder="Username" required>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-user"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="password" id="password" class="form-control" placeholder="Password" required>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary btn-block">Registrati</button>
+                        </div>
+                    </div>
+                </form>
+                <p class="mt-3 mb-1">
+                    <a href="login.html">Hai già un account? Accedi</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+    <script>
+        // Gestione della registrazione
+        document.getElementById("registerForm").addEventListener("submit", function (event) {
+            event.preventDefault(); // Impedisce il ricaricamento della pagina
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            // Invia la richiesta di registrazione al backend
+            fetch("/api/auth/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        alert("Registrazione completata con successo!");
+                        window.location.href = "login.html"; // Reindirizza alla pagina di login
+                    } else {
+                        alert("Errore durante la registrazione. Riprova.");
+                    }
+                })
+                .catch((error) => {
+                    console.error("Errore durante la registrazione:", error);
+                    alert("Si è verificato un errore durante la registrazione. Riprova.");
+                });
+        });
+    </script>
+</body>
+</html>
