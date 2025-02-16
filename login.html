@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="hold-transition login-page">
+    <div class="login-box">
+        <div class="login-logo">
+            <a href="index.html"><b>Portale</b>Clienti</a>
+        </div>
+        <!-- Login Form -->
+        <div class="card">
+            <div class="card-body login-card-body">
+                <p class="login-box-msg">Accedi per iniziare la sessione</p>
+                <form id="loginForm">
+                    <div class="input-group mb-3">
+                        <input type="text" id="username" class="form-control" placeholder="Username" required>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-user"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="password" id="password" class="form-control" placeholder="Password" required>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary btn-block">Accedi</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+    <script>
+        // Gestione del login
+        document.getElementById("loginForm").addEventListener("submit", function (event) {
+            event.preventDefault(); // Impedisce il ricaricamento della pagina
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            // Invia la richiesta di login al backend
+            fetch("/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        // Memorizza lo stato di login e il tipo di utente in sessionStorage
+                        sessionStorage.setItem("loggedIn", true);
+                        sessionStorage.setItem("userType", data.user.type);
+                        sessionStorage.setItem("userId", data.user.id);
+
+                        // Reindirizza alla dashboard corretta
+                        if (data.user.type === "cliente") {
+                            window.location.href = "dashboard_cliente.html";
+                        } else if (data.user.type === "negoziante") {
+                            window.location.href = "dashboard_negoziante.html";
+                        }
+                    } else {
+                        alert("Credenziali non valide. Riprova.");
+                    }
+                })
+                .catch((error) => {
+                    console.error("Errore durante il login:", error);
+                    alert("Si è verificato un errore durante il login. Riprova.");
+                });
+        });
+    </script>
+</body>
+</html>

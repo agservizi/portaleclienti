@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Cliente</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <!-- Brand Logo -->
+            <a href="index.html" class="brand-link">
+                <span class="brand-text font-weight-light">Portale Clienti</span>
+            </a>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar Menu -->
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+                        <li class="nav-item">
+                            <a href="dashboard_cliente.html" class="nav-link active">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>Dashboard</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="richiesta_attivazione.html" class="nav-link">
+                                <i class="nav-icon fas fa-file-contract"></i>
+                                <p>Richiesta Attivazione</p>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Content Wrapper -->
+        <div class="content-wrapper">
+            <!-- Main content -->
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Benvenuto, Cliente</h3>
+                                </div>
+                                <div class="card-body">
+                                    <p>Qui puoi gestire i tuoi contratti e richiedere nuove attivazioni.</p>
+                                    <a href="richiesta_attivazione.html" class="btn btn-primary">Richiedi Attivazione Contratto</a>
+                                    <button id="logoutButton" class="btn btn-danger float-right">Logout</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabella Contratti -->
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Contratti Attivi</h3>
+                                </div>
+                                <div class="card-body">
+                                    <table id="contrattiTable" class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>ID Contratto</th>
+                                                <th>Servizio</th>
+                                                <th>Data Attivazione</th>
+                                                <th>Stato</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- I dati verranno caricati dinamicamente da script.js -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <div class="float-right d-none d-sm-block">
+                <b>Versione</b> 1.0.0
+            </div>
+            <strong>&copy; 2023 Portale Clienti.</strong> Tutti i diritti riservati.
+        </footer>
+    </div>
+
+    <!-- Modal Richiesta Attivazione -->
+    <div class="modal fade" id="richiestaModal" tabindex="-1" role="dialog" aria-labelledby="richiestaModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="richiestaModalLabel">Richiedi Attivazione Contratto</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="richiestaForm">
+                        <!-- Checkbox Nuova Attivazione / Porta il tuo numero -->
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="nuovaAttivazione">
+                                <label class="form-check-label" for="nuovaAttivazione">Nuova Attivazione</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="portaNumero">
+                                <label class="form-check-label" for="portaNumero">Porta il tuo numero</label>
+                            </div>
+                        </div>
+
+                        <!-- Anagrafica Cliente -->
+                        <div class="form-group">
+                            <label for="nome">Nome</label>
+                            <input type="text" id="nome" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cognome">Cognome</label>
+                            <input type="text" id="cognome" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" class="form-control" required>
+                        </div>
+
+                        <!-- Servizio da Richiedere -->
+                        <div class="form-group">
+                            <label for="servizio">Servizio</label>
+                            <select id="servizio" class="form-control" required>
+                                <option value="Fastweb Internet">Fastweb Internet</option>
+                                <option value="Windtre Mobile">Windtre Mobile</option>
+                            </select>
+                        </div>
+
+                        <!-- Codice Migrazione (solo se "Porta il tuo numero" è selezionato) -->
+                        <div class="form-group" id="codiceMigrazioneGroup" style="display: none;">
+                            <label for="codiceMigrazione">Codice Migrazione</label>
+                            <input type="text" id="codiceMigrazione" class="form-control">
+                        </div>
+
+                        <!-- Numero di Telefono (solo se "Porta il tuo numero" è selezionato) -->
+                        <div class="form-group" id="numeroTelefonoGroup" style="display: none;">
+                            <label for="numeroTelefono">Numero di Telefono</label>
+                            <input type="text" id="numeroTelefono" class="form-control">
+                        </div>
+
+                        <!-- Altre Info -->
+                        <div class="form-group">
+                            <label for="altreInfo">Altre Info</label>
+                            <textarea id="altreInfo" class="form-control" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+                    <button type="submit" form="richiestaForm" class="btn btn-primary">Invia Richiesta</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+    <script>
+        // Funzione per caricare i contratti del cliente
+        function loadContrattiCliente() {
+            const userId = sessionStorage.getItem("userId");
+
+            fetch(`/api/contratti/${userId}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    const tableBody = document.querySelector("#contrattiTable tbody");
+                    tableBody.innerHTML = "";
+
+                    data.forEach((contratto) => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                            <td>${contratto.id}</td>
+                            <td>${contratto.servizio}</td>
+                            <td>${contratto.data_attivazione}</td>
+                            <td><span class="badge ${contratto.stato === "Attivo" ? "bg-success" : "bg-warning"}">${contratto.stato}</span></td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                })
+                .catch((error) => {
+                    console.error("Errore durante il caricamento dei contratti:", error);
+                    alert("Si è verificato un errore durante il caricamento dei contratti.");
+                });
+        }
+
+        // Funzione per gestire il logout
+        document.getElementById("logoutButton").addEventListener("click", function () {
+            sessionStorage.removeItem("loggedIn");
+            sessionStorage.removeItem("userType");
+            sessionStorage.removeItem("userId");
+            window.location.href = "login.html";
+        });
+
+        // Funzione per gestire la visibilità dei campi "Codice Migrazione" e "Numero di Telefono"
+        document.getElementById("portaNumero").addEventListener("change", function () {
+            const codiceMigrazioneGroup = document.getElementById("codiceMigrazioneGroup");
+            const numeroTelefonoGroup = document.getElementById("numeroTelefonoGroup");
+
+            if (this.checked) {
+                codiceMigrazioneGroup.style.display = "block";
+                numeroTelefonoGroup.style.display = "block";
+            } else {
+                codiceMigrazioneGroup.style.display = "none";
+                numeroTelefonoGroup.style.display = "none";
+            }
+        });
+
+        // Carica i contratti quando la pagina è pronta
+        document.addEventListener("DOMContentLoaded", function () {
+            const loggedIn = sessionStorage.getItem("loggedIn");
+            const userType = sessionStorage.getItem("userType");
+
+            if (!loggedIn || userType !== "cliente") {
+                window.location.href = "login.html";
+            } else {
+                loadContrattiCliente();
+            }
+        });
+    </script>
+</body>
+</html>
