@@ -19,8 +19,9 @@ exports.register = (req, res) => {
         // Imposta il tipo di utente su "cliente"
         const type = "cliente";
 
+        // Inserisci il nuovo utente nel database
         const query = "INSERT INTO users (username, password, type) VALUES (?, ?, ?)";
-        db.query(query, [username, hash, type], (err) => {
+        db.run(query, [username, hash, type], function (err) {
             if (err) {
                 console.error("Errore durante la registrazione:", err);
                 return res.status(500).json({ success: false, message: "Errore del server" });
@@ -37,17 +38,13 @@ exports.login = (req, res) => {
     console.log("Tentativo di login con:", username); // 🔍 LOG
 
     const query = "SELECT * FROM users WHERE username = ?";
-    db.query(query, [username], (err, results) => {
+    db.get(query, [username], (err, user) => {
         if (err) {
             console.error("Errore SQL:", err);
             return res.status(500).json({ success: false, message: "Errore del server" });
         }
 
-        console.log("Risultati query:", results); // 🔍 LOG
-
-        if (results.length > 0) {
-            const user = results[0];
-
+        if (user) {
             bcrypt.compare(password, user.password, (err, match) => {
                 if (err) {
                     console.error("Errore bcrypt:", err);
